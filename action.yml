@@ -49,4 +49,9 @@ runs:
 
         # Pull image if needed, then run
         docker pull ghcr.io/scribe-security/prfindings:latest
-        docker run --rm $ENVS_ARGS $MOUNTS ghcr.io/scribe-security/prfindings:latest python main.py --config /app/config.yml --env-file /app/.env --output-dir /app/output
+        CMD="python main.py --config /app/config.yml"
+        if [ -n "${{ inputs.env_file }}" ]; then
+          CMD="$CMD --env-file /app/.env"
+        fi
+        CMD="$CMD --output-dir /app/output"
+        docker run --rm $ENVS_ARGS $MOUNTS ghcr.io/scribe-security/prfindings:latest $CMD
